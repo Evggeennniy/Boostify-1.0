@@ -1,0 +1,9 @@
+# Local
+instance/
+venv/
+
+# Flask App
+# caching
+__pycache__/
+migrations/
+
