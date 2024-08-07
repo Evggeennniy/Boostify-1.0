@@ -15,6 +15,7 @@ def create_app() -> Flask:
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_AUTH_USERNAME')
     app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_AUTH_PASSWORD')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
     basic_auth = BasicAuth(app)
     cache = Client(('127.0.0.1', 11211))
 
