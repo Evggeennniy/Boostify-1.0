@@ -5,4 +5,5 @@ venv/
 # Flask App
 # caching
 __pycache__/
+.env
 
