@@ -45,11 +45,14 @@ class Bill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(
-        db.Enum('Обробка', 'Виконаний', 'Відхилений', name='status'),
+        db.Enum('Обробка', 'Виконаний', 'Відхилений', name='bill_status'),
         default='Обробка',
         nullable=False
     )
-    created = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.DateTime, default=datetime.now)
+    orders = db.relationship(
+        'Order', backref='bill', lazy=False, cascade="all, delete-orphan"
+    )
 
 
 class Order(db.Model):
@@ -62,18 +65,13 @@ class Order(db.Model):
     price = db.Column(db.DECIMAL(10, 2), nullable=False)
     url = db.Column(db.String(256), nullable=False)
     status = db.Column(
-        db.Enum('Обробка', 'Виконаний', name='status'),
+        db.Enum('Обробка', 'Виконаний', name='order_status'),
         default='Обробка',
         nullable=False
     )
     provider = db.Column(db.String(16), nullable=False)
     service_id = db.Column(db.Integer, nullable=False)
-    assigned_bill = db.Column(db.Integer, db.ForeignKey('bill.id'),
-                              nullable=False
-                              )
-    bill_for = db.relationship(
-        'Bill', backref='orders', lazy=False
-    )
+    assigned_bill = db.Column(db.Integer, db.ForeignKey('bill.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return f'<{self.instance} {self.service}>'

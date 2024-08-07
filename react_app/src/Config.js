@@ -1,3 +1,9 @@
-export const staticPath = "http://192.168.100.14:5000/static";
-export const apiUrlServices = "http://192.168.100.14:5000/api/services";
-export const apiUrlCreate = "http://192.168.100.14:5000/api/create_bill";
+export let staticPath;
+export const apiUrlServices = "http://127.0.0.1:53433/api/services";
+export const apiUrlCreate = "http://127.0.0.1:53433/api/create_bill";
+
+if (process.env.NODE_ENV === "production") {
+  staticPath = "/static";
+} else {
+  staticPath = "http://127.0.0.1:53433/static";
+}
