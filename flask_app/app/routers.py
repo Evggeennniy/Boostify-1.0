@@ -1,10 +1,14 @@
-from flask import render_template, request, jsonify, abort
+from flask import render_template, request, jsonify, abort, send_from_directory
 from app.models import db, Service, Object, Bill, Order
 import pickle
 from decimal import Decimal
 
 
 def init_routers(app, cache):
+    @app.route('/')
+    def index():
+        return send_from_directory('templates', 'index.html')
+
     @app.route('/api/services', methods=('GET',))
     def get_services():
         instance_type = request.args.get('instance')

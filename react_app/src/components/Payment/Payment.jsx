@@ -15,7 +15,6 @@ export const Payment = () => {
   const card = "5375 4115 9012 5097";
 
   const handleConfirm = () => {
-    console.log(currentOrdersList);
     const api = new URL(apiUrlCreate);
     fetch(api, {
       method: "POST",
