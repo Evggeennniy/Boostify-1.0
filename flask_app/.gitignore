@@ -1,6 +1,7 @@
 # Local
 instance/
 venv/
+.env
 
 # Flask App
 # caching
