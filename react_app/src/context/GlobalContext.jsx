@@ -10,6 +10,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [currentNotificationsId, setNotificationsId] = useState(0);
   const [currentOrdersList, setOrdersList] = useState([]);
   const [currentOrderId, setOrderId] = useState(0);
+  const [currentApiData, setApiData] = useState({});
 
   const addNotification = (text, type) => {
     const newNotification = {
@@ -58,6 +59,8 @@ export const GlobalContextProvider = ({ children }) => {
         setOrdersList,
         currentOrderId,
         setOrderId,
+        currentApiData,
+        setApiData,
       }}
     >
       {children}

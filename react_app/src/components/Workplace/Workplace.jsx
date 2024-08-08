@@ -13,6 +13,8 @@ export const Workplace = function () {
     setOrdersList,
     currentOrderId,
     setOrderId,
+    currentApiData,
+    setApiData,
   } = useGlobalContext();
 
   const constuctorRef = useRef(null);
@@ -20,7 +22,6 @@ export const Workplace = function () {
 
   const [currentWorkplace, setCurrentWorkplace] = useState("constructor");
   const [currentInput, setInput] = useState("");
-  const [currentApiData, setApiData] = useState({});
   const [currentUrl, setUrl] = useState("");
   const [currentInstance, setInstance] = useState({});
   const [currentServices, setServices] = useState([]);
@@ -128,6 +129,7 @@ export const Workplace = function () {
   };
 
   const handleResetOrder = () => {
+    setInstance(currentApiData.object);
     setServices(currentApiData.services);
     setQuantity(0);
     setPrice(0);
