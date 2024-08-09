@@ -36,7 +36,7 @@ export const GlobalContextProvider = ({ children }) => {
   const moveToPayment = () => {
     if (currentOrdersList.length == 0) {
       return addNotification("Кошик порожній", "error");
-    } else if (getFullPrice() <= 40)
+    } else if (getFullPrice() < 40)
       return addNotification("Мiн. замовлення від 40 грн", "error");
 
     setPageState("payment");
