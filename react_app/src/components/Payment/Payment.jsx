@@ -1,7 +1,7 @@
 import { staticPath, apiUrlCreate } from "../../Config";
 import { PaymentSteps } from "../Steps";
 import { useGlobalContext } from "../../context/GlobalContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export const Payment = () => {
   const {
@@ -12,6 +12,7 @@ export const Payment = () => {
     setOrderId,
   } = useGlobalContext();
   const [currentPrice, setPrice] = useState(0);
+  const confirmButtonRef = useRef(null);
   const card = "5375 4115 9012 5097";
 
   const handleConfirm = () => {
@@ -44,6 +45,7 @@ export const Payment = () => {
   const handleCopyCard = () => {
     navigator.clipboard.writeText(card);
     addNotification("Скопійовано!", "ok");
+    confirmButtonRef.current.disabled = false;
   };
 
   const getFullPrice = () => {
@@ -58,6 +60,7 @@ export const Payment = () => {
   useEffect(() => {
     const totalPrice = getFullPrice();
     setPrice(totalPrice);
+    confirmButtonRef.current.disabled = true;
   }, []);
 
   return (
@@ -78,7 +81,11 @@ export const Payment = () => {
             </button>
           </div>
           <div className="payment__menu">
-            <button className="payment__menu-button" onClick={handleConfirm}>
+            <button
+              className="payment__menu-button"
+              onClick={handleConfirm}
+              ref={confirmButtonRef}
+            >
               Відправив(ла)
             </button>
             <button className="payment__menu-button" onClick={moveToOrdering}>
