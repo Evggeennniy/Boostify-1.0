@@ -879,7 +879,8 @@ input {
 /* BUTTON */
 /* TOOLS */
 button,
-img {
+img,
+.unselectable {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;

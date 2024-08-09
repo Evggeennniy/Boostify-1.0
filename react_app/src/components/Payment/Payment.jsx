@@ -10,6 +10,7 @@ export const Payment = () => {
     currentOrdersList,
     setOrdersList,
     setOrderId,
+    getFullPrice,
   } = useGlobalContext();
   const [currentPrice, setPrice] = useState(0);
   const confirmButtonRef = useRef(null);
@@ -48,15 +49,6 @@ export const Payment = () => {
     confirmButtonRef.current.disabled = false;
   };
 
-  const getFullPrice = () => {
-    let price = 0;
-    currentOrdersList.map((item) => {
-      price += +item.details.price;
-    });
-
-    return price;
-  };
-
   useEffect(() => {
     const totalPrice = getFullPrice();
     setPrice(totalPrice);
@@ -68,7 +60,7 @@ export const Payment = () => {
       <section className="payment">
         <div className="payment__wrapper container workplace_container">
           <div className="payment__item">
-            <div className="payment__item-data">
+            <div className="payment__item-data unselectable">
               <p className="payment__item-card">{card}</p>
               <p className="payment__item-price">{currentPrice}₴</p>
             </div>

@@ -34,11 +34,21 @@ export const GlobalContextProvider = ({ children }) => {
   };
 
   const moveToPayment = () => {
-    if (currentOrdersList.length >= 1) {
-      setPageState("payment");
-    } else {
-      addNotification("Кошик порожній", "error");
-    }
+    if (currentOrdersList.length == 0) {
+      return addNotification("Кошик порожній", "error");
+    } else if (getFullPrice() <= 40)
+      return addNotification("Мiн. замовлення від 40 грн", "error");
+
+    setPageState("payment");
+  };
+
+  const getFullPrice = () => {
+    let price = 0;
+    currentOrdersList.map((item) => {
+      price += +item.details.price;
+    });
+
+    return price;
   };
 
   const moveToOrdering = () => {
@@ -61,6 +71,7 @@ export const GlobalContextProvider = ({ children }) => {
         setOrderId,
         currentApiData,
         setApiData,
+        getFullPrice,
       }}
     >
       {children}
