@@ -72,7 +72,7 @@ def init_routers(app, cache):
         cached_orders = cache.get('cached_orders')
         if cached_orders:
             cached_orders = pickle.loads(cached_orders)
-            cached_orders.append(f"Boostify: Получен заказ. №{new_bill.id} - {price} грн")
+            cached_orders.append(f"Заказ №{new_bill.id} - {price} грн")
         else:
             cached_orders = list()
 
