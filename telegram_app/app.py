@@ -11,6 +11,7 @@ HOST = '127.0.0.1'
 PORT = 11211
 telegram_api_key = os.getenv('TG_API')
 application = Application.builder().token(telegram_api_key).build()
+admins_ids = 1306750810, 414902937
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -19,10 +20,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         cached_orders = await acache.get('cached_orders')
 
         if cached_orders:
-            for order in cached_orders:
-                await context.bot.send_message(chat_id=1306750810, text=order)
-            for order in cached_orders:
-                await context.bot.send_message(chat_id=414902937, text=order)
+            cached_orders = [order for order in cached_orders]
+            orders = '\n'.join(cached_orders)
+
+            for id in admins_ids:
+                await context.bot.send_message(chat_id=id, text=orders)
+
             print('Заказы отправлены администраторам')
 
             await acache.set('cached_orders', [])
