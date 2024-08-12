@@ -15,25 +15,28 @@ admins_ids = 1306750810, 414902937
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    while True:
-        acache = amemcache.aCacheClient(HOST, PORT)
-        cached_orders = await acache.get('cached_orders')
+    async def orders_checking():
+        while True:
+            acache = amemcache.aCacheClient(HOST, PORT)
+            cached_orders = await acache.get('cached_orders')
 
-        if cached_orders:
-            cached_orders = [order for order in cached_orders]
-            orders = '\n'.join(cached_orders)
+            if cached_orders:
+                cached_orders = [order for order in cached_orders]
+                orders = '\n'.join(cached_orders)
 
-            for id in admins_ids:
-                await context.bot.send_message(chat_id=id, text=orders)
+                for id in admins_ids:
+                    await context.bot.send_message(chat_id=id, text=orders)
 
-            print('Заказы отправлены администраторам')
+                print('Заказы отправлены администраторам')
 
-            await acache.set('cached_orders', [])
-        else:
-            print('Нет данных')
+                await acache.set('cached_orders', [])
+            else:
+                print('Нет данных')
 
-        await acache.close()
-        await asyncio.sleep(5)
+            await acache.close()
+            await asyncio.sleep(5)
+
+    asyncio.create_task(orders_checking())
 
 
 def main() -> None:
