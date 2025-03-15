@@ -19,6 +19,8 @@ function App() {
         return <Workplace />;
       case "payment":
         return <Payment />;
+      default:
+        return <div>404</div>;
     }
   };
 

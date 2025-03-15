@@ -1,4 +1,3 @@
-import { staticPath } from "../../Config";
 import { useGlobalContext } from "../../context/GlobalContext";
 
 export const Notifications = () => {
@@ -10,7 +9,7 @@ export const Notifications = () => {
         {currentNotifications.map((item) => (
           <div className="notification__item" key={item.notificationId}>
             <img
-              src={`${staticPath}/svg/${item.type}_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/${item.type}_icon.svg`}
               alt="icon"
               className="notification__icon"
             />

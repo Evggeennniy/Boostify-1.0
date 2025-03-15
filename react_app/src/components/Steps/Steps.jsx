@@ -1,5 +1,3 @@
-import { staticPath } from "../../Config";
-
 export const WorkSteps = function () {
   return (
     <section className="steps">
@@ -13,7 +11,7 @@ export const WorkSteps = function () {
         <div className="steps__explain">
           <div className="steps__item">
             <img
-              src={`${staticPath}/svg/copy_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/copy_icon.svg`}
               alt="copy-icon"
               className="steps__item-icon"
             />
@@ -25,7 +23,7 @@ export const WorkSteps = function () {
           </div>
           <div className="steps__item">
             <img
-              src={`${staticPath}/svg/category_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/category_icon.svg`}
               alt="category-icon"
               className="steps__item-icon"
             />
@@ -37,7 +35,7 @@ export const WorkSteps = function () {
           </div>
           <div className="steps__item">
             <img
-              src={`${staticPath}/svg/payment_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/payment_icon.svg`}
               alt="payment-icon"
               className="steps__item-icon"
             />
@@ -66,7 +64,7 @@ export const PaymentSteps = () => {
         <div className="payment-steps__explain">
           <div className="payment-steps__item">
             <img
-              src={`${staticPath}/svg/payment_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/payment_icon.svg`}
               alt="copy-icon"
               className="payment-steps__item-icon"
             />
@@ -78,7 +76,7 @@ export const PaymentSteps = () => {
           </div>
           <div className="payment-steps__item">
             <img
-              src={`${staticPath}/svg/click_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/click_icon.svg`}
               alt="category-icon"
               className="payment-steps__item-icon"
             />
@@ -90,7 +88,7 @@ export const PaymentSteps = () => {
           </div>
           <div className="payment-steps__item">
             <img
-              src={`${staticPath}/svg/loading_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/loading_icon.svg`}
               alt="payment-icon"
               className="payment-steps__item-icon"
             />
