@@ -1,14 +1,10 @@
-from flask import render_template, request, jsonify, abort, send_from_directory
-from app.models import db, Service, Object, Bill, Order
+from flask import request, jsonify, abort
+from app.models import db, Object, Bill, Order
 import pickle
 from decimal import Decimal
 
 
 def init_routers(app, cache):
-    @app.route('/')
-    def index():
-        return send_from_directory('templates', 'index.html')
-
     @app.route('/api/services', methods=('GET',))
     def get_services():
         instance_type = request.args.get('instance')
@@ -69,13 +65,6 @@ def init_routers(app, cache):
         db.session.bulk_save_objects(new_orders)
         db.session.commit()
 
-        cached_orders = cache.get('cached_orders')
-        if cached_orders:
-            cached_orders = pickle.loads(cached_orders)
-            cached_orders.append(f"Заказ №{new_bill.id} - {price} грн")
-        else:
-            cached_orders = list()
-
-        cache.set('cached_orders', pickle.dumps(cached_orders))
+        # TODO SEND MESSAGE TO TG
 
         return '', 200

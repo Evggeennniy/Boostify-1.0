@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_basicauth import BasicAuth
-from pymemcache import Client
 from dotenv import load_dotenv
+from pymemcache import Client
 import os
 
 
@@ -15,18 +15,18 @@ def create_app() -> Flask:
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_AUTH_USERNAME')
     app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_AUTH_PASSWORD')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     basic_auth = BasicAuth(app)
     cache = Client(('127.0.0.1', 11211))
 
     from app.models import db
-    from app.admin import admin_init
+    from app.admin import init_admin
     from app.routers import init_routers
     from app.cors import init_cors
 
     db.init_app(app)
     Migrate(app, db)
-    admin_init(app, basic_auth)
+    init_admin(app, basic_auth)
     init_routers(app, cache)
     init_cors(app)
 
@@ -34,3 +34,6 @@ def create_app() -> Flask:
         db.create_all()
 
     return app
+
+
+app = create_app()
