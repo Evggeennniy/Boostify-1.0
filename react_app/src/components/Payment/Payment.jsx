@@ -1,4 +1,3 @@
-import { staticPath, apiUrlCreate } from "../../Config";
 import { PaymentSteps } from "../Steps";
 import { useGlobalContext } from "../../context/GlobalContext";
 import { useState, useEffect, useRef } from "react";
@@ -14,10 +13,10 @@ export const Payment = () => {
   } = useGlobalContext();
   const [currentPrice, setPrice] = useState(0);
   const confirmButtonRef = useRef(null);
-  const card = "5375 4115 9012 5097";
+  const card = "0000 0000 0000 0000";
 
   const handleConfirm = () => {
-    const api = new URL(apiUrlCreate);
+    const api = new URL(`${process.env.REACT_APP_CREATE_ORDER_API_URI}`);
     fetch(api, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,6 +38,8 @@ export const Payment = () => {
             return addNotification("Не отримано сервером", "error");
           case 500:
             return addNotification("Помилка сервера", "error");
+          default:
+            return addNotification("Помилка", "error");
         }
       });
   };
@@ -50,10 +51,9 @@ export const Payment = () => {
   };
 
   useEffect(() => {
-    const totalPrice = getFullPrice();
-    setPrice(totalPrice);
+    setPrice(() => getFullPrice());
     confirmButtonRef.current.disabled = true;
-  }, []);
+  }, [getFullPrice]);
 
   return (
     <div className="wrap">
@@ -66,7 +66,7 @@ export const Payment = () => {
             </div>
             <button className="payment__item-copy" onClick={handleCopyCard}>
               <img
-                src={`${staticPath}/svg/copy_icon.svg`}
+                src={`${process.env.PUBLIC_URL}/svg/copy_icon.svg`}
                 alt="copy-icon"
                 className="payment__item-icon"
               />
@@ -82,7 +82,7 @@ export const Payment = () => {
             </button>
             <button className="payment__menu-button" onClick={moveToOrdering}>
               <img
-                src={`${staticPath}/svg/cancel_icon.svg`}
+                src={`${process.env.PUBLIC_URL}/svg/cancel_icon.svg`}
                 alt="cancel-icon"
                 className="payment__menu-icon"
               />

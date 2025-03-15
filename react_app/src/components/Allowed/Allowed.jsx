@@ -1,5 +1,3 @@
-import { staticPath } from "../../Config";
-
 export const Allowed = function () {
   return (
     <section className="allowed">
@@ -7,7 +5,7 @@ export const Allowed = function () {
         <div className="allowed__group">
           <div className="allowed__item">
             <img
-              src={`${staticPath}/svg/instagram_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/instagram_icon.svg`}
               alt="inst-icon"
               className="allowed__item-icon"
             />
@@ -15,7 +13,7 @@ export const Allowed = function () {
           </div>
           <div className="allowed__item">
             <img
-              src={`${staticPath}/svg/tiktok_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/tiktok_icon.svg`}
               alt="tiktok-icon"
               className="allowed__item-icon"
             />
@@ -23,7 +21,7 @@ export const Allowed = function () {
           </div>
           <div className="allowed__item">
             <img
-              src={`${staticPath}/svg/telegram_icon.svg`}
+              src={`${process.env.PUBLIC_URL}/svg/telegram_icon.svg`}
               alt="telegram-icon"
               className="allowed__item-icon"
             />

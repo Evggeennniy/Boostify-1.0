@@ -34,7 +34,7 @@ export const GlobalContextProvider = ({ children }) => {
   };
 
   const moveToPayment = () => {
-    if (currentOrdersList.length == 0) {
+    if (currentOrdersList.length === 0) {
       return addNotification("Кошик порожній", "error");
     } else if (getFullPrice() < 40)
       return addNotification("Мiн. замовлення від 40 грн", "error");
@@ -44,9 +44,7 @@ export const GlobalContextProvider = ({ children }) => {
 
   const getFullPrice = () => {
     let price = 0;
-    currentOrdersList.map((item) => {
-      price += +item.details.price;
-    });
+    currentOrdersList.map((item) => (price += +item.details.price));
 
     return price;
   };

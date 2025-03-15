@@ -1,5 +1,4 @@
 import * as utils from "../../utils";
-import { staticPath, apiUrlServices } from "../../Config";
 import { useRef, useState } from "react";
 import { useGlobalContext } from "../../context/GlobalContext";
 
@@ -39,7 +38,7 @@ export const Workplace = function () {
     const instance = utils.identifyUrl(currentUrl);
     if (!instance) return addNotification("Посилання не розпізнане", "error");
 
-    const api = new URL(apiUrlServices);
+    const api = new URL(process.env.REACT_APP_GET_SERVICES_API_URI);
     api.searchParams.append("instance", instance);
     fetch(api, { method: "GET" })
       .then((response) => {
@@ -50,10 +49,13 @@ export const Workplace = function () {
         setApiData(data);
         handleApiData(data);
 
-        currentWorkplace !== "constructor"
-          ? setCurrentWorkplace("constructor")
-          : "";
-        pageIsActive == false ? setPageIsActive(true) : "";
+        if (currentWorkplace !== "constructor") {
+          setCurrentWorkplace("constructor");
+        }
+
+        if (!pageIsActive) {
+          setPageIsActive(true);
+        }
       })
       .catch((error) => {
         switch (+error.message) {
@@ -61,6 +63,8 @@ export const Workplace = function () {
             return addNotification("Не знайдено послуг", "error");
           case 500:
             return addNotification("Помилка сервера", "error");
+          default:
+            return addNotification("Помилка", "error");
         }
       });
   };
@@ -71,9 +75,9 @@ export const Workplace = function () {
   };
 
   const handleChooseService = (itemId) => {
-    if (currentServices.length == 1) return;
+    if (currentServices.length === 1) return;
     const filteredServices = currentServices.filter(
-      (item) => item.id == itemId
+      (item) => item.id === itemId
     );
     setServices(filteredServices);
   };
@@ -110,7 +114,7 @@ export const Workplace = function () {
   };
 
   const handleOpenBasket = () => {
-    currentWorkplace == "constructor"
+    currentWorkplace === "constructor"
       ? setCurrentWorkplace("basket")
       : setCurrentWorkplace("constructor");
     basketButtonRef.current.classList.toggle("active");
@@ -151,7 +155,7 @@ export const Workplace = function () {
         />
         <button className="search__button" onClick={handleCreateOrder}>
           <img
-            src={`${staticPath}/svg/plus_icon.svg`}
+            src={`${process.env.PUBLIC_URL}/svg/plus_icon.svg`}
             alt="plus-icon"
             className="search__icon"
           />
@@ -169,7 +173,7 @@ export const Workplace = function () {
             >
               <img
                 className="menu__icon"
-                src={`${staticPath}/svg/arrow_down_icon.svg`}
+                src={`${process.env.PUBLIC_URL}/svg/arrow_down_icon.svg`}
                 alt="arrow"
               />
               <p className="menu__title">Кошик</p>
@@ -181,29 +185,29 @@ export const Workplace = function () {
             >
               <img
                 className="menu__icon"
-                src={`${staticPath}/svg/payment_icon.svg`}
+                src={`${process.env.PUBLIC_URL}/svg/payment_icon.svg`}
                 alt="arrow"
               />
               <p className="menu__title">Оплата</p>
             </button>
-            {currentWorkplace == "constructor" && (
+            {currentWorkplace === "constructor" && (
               <button
                 className="menu__button menu__button--white"
                 onClick={handleResetOrder}
               >
                 <img
                   className="menu__icon"
-                  src={`${staticPath}/svg/reset_icon.svg`}
+                  src={`${process.env.PUBLIC_URL}/svg/reset_icon.svg`}
                   alt="arrow"
                 />
               </button>
             )}
           </nav>
 
-          {currentWorkplace == "constructor" && (
+          {currentWorkplace === "constructor" && (
             <div className="constructor">
               <div className="constructor__wrap">
-                {Object.keys(currentInstance).length == 0 ? (
+                {Object.keys(currentInstance).length === 0 ? (
                   <p className="constructor-empty-message">
                     Конструктор порожній
                   </p>
@@ -212,7 +216,7 @@ export const Workplace = function () {
                     <div className="constructor__object" ref={constuctorRef}>
                       <div className="constructor__object-origin">
                         <img
-                          src={`${staticPath}/${currentInstance.icon}`}
+                          src={`${process.env.REACT_APP_GET_STATIC_URI}/${currentInstance.icon}`}
                           alt="object-icon"
                           className="constructor__object-icon"
                         />
@@ -237,7 +241,7 @@ export const Workplace = function () {
                             {item.name}
                           </p>
                           <img
-                            src={`${staticPath}/${item.icon}`}
+                            src={`${process.env.REACT_APP_GET_STATIC_URI}/${item.icon}`}
                             alt="service-icon"
                             className="constructor__services-icon"
                           />
@@ -247,7 +251,7 @@ export const Workplace = function () {
                   </div>
                 )}
               </div>
-              {currentServices.length == 1 && (
+              {currentServices.length === 1 && (
                 <div className="constructor__confirm">
                   <p className="constructor__confirm-output">{currentPrice}₴</p>
                   <div className="constructor__confirm-content">
@@ -263,7 +267,7 @@ export const Workplace = function () {
                       onClick={handleAddOrder}
                     >
                       <img
-                        src={`${staticPath}/svg/accept_icon.svg`}
+                        src={`${process.env.PUBLIC_URL}/svg/accept_icon.svg`}
                         alt="basket_icon"
                         className="constructor__confirm-icon"
                       />
@@ -277,7 +281,7 @@ export const Workplace = function () {
           {currentWorkplace === "basket" && (
             <div className="basket">
               <div className="basket-wrap">
-                {currentOrdersList.length == 0 ? (
+                {currentOrdersList.length === 0 ? (
                   <p className="basket-empty-message">Кошик порожній</p>
                 ) : (
                   currentOrdersList.map((item) => (
@@ -289,12 +293,12 @@ export const Workplace = function () {
                       <div className="basket__item-wrap">
                         <div className="basket__item-content">
                           <img
-                            src={`${staticPath}/svg/arrow_down_icon.svg`}
+                            src={`${process.env.PUBLIC_URL}/svg/arrow_down_icon.svg`}
                             alt="arrow"
                             className="basket__item-arrow"
                           />
                           <img
-                            src={`${staticPath}/${item.instance.icon}`}
+                            src={`${process.env.REACT_APP_GET_STATIC_URI}/${item.instance.icon}`}
                             alt="icon"
                             className="basket__item-icon"
                           />
@@ -315,7 +319,7 @@ export const Workplace = function () {
                           onClick={() => handleDeleteOrder(item.id)}
                         >
                           <img
-                            src={`${staticPath}/svg/delete_icon.svg`}
+                            src={`${process.env.PUBLIC_URL}/svg/delete_icon.svg`}
                             alt="icon"
                             className="basket__menu-icon"
                           />
@@ -326,7 +330,7 @@ export const Workplace = function () {
                           onClick={() => handleRedirect(item.details.url)}
                         >
                           <img
-                            src={`${staticPath}/svg/open_icon.svg`}
+                            src={`${process.env.PUBLIC_URL}/svg/open_icon.svg`}
                             alt="icon"
                             className="basket__menu-icon"
                           />

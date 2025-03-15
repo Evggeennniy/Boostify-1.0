@@ -1,12 +1,10 @@
-import { staticPath } from "../../Config";
-
 export const Header = function () {
   return (
     <header className="header">
       <div className="header-wrap container">
         <div className="logotype">
           <img
-            src={`${staticPath}/img/logotype.png`}
+            src={`${process.env.PUBLIC_URL}/img/logotype.png`}
             alt="logotype"
             className="logotype__img"
           />
@@ -16,12 +14,13 @@ export const Header = function () {
           <ul className="nav__list">
             <li className="nav__item">
               <a
-                href="https://t.me/riseapp_support"
+                href="https://t.me/Evgeniy_DevX"
                 target="_blank"
+                rel="noreferrer"
                 className="nav__link"
               >
                 <img
-                  src={`${staticPath}/svg/support_icon.svg`}
+                  src={`${process.env.PUBLIC_URL}/svg/support_icon.svg`}
                   alt="icon"
                   className="nav__link-icon"
                 />
