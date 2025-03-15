@@ -9,3 +9,4 @@ mysql-connector-python==9.0.0
 python-dotenv==1.0.1
 pymemcache==4.0.0
 gunicorn==22.0.0
+celery==5.4.0

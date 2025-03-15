@@ -43,7 +43,7 @@ class BillAdmin(ModelView):
     inline_models = [Order,]
 
 
-def admin_init(app, basic_auth):
+def init_admin(app, basic_auth):
     class MyAdminIndexView(AdminIndexView):
         @expose('/')
         def index(self):
