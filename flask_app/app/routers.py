@@ -1,6 +1,6 @@
 from flask import request, jsonify, abort
 from app.models import db, Object, Bill, Order
-from config import TG_BOT_API_KEY, TG_GROUP_ID
+from app.config import TG_BOT_API_KEY, TG_GROUP_ID
 from decimal import Decimal
 
 
