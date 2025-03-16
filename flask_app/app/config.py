@@ -5,9 +5,13 @@ from dotenv import load_dotenv
 from pymemcache import Client
 import os
 
+load_dotenv()
+
+TG_BOT_API_KEY = os.getenv('TG_BOT_API_KEY')
+TG_GROUP_ID = os.getenv('TG_GROUP_ID')
+
 
 def create_app() -> Flask:
-    load_dotenv()
 
     app = Flask(__name__)
     app.secret_key = os.getenv('SECRET_KEY')
