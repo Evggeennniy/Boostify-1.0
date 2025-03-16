@@ -71,7 +71,8 @@ class Order(db.Model):
     )
     provider = db.Column(db.String(16), nullable=False)
     service_id = db.Column(db.Integer, nullable=False)
-    assigned_bill = db.Column(db.Integer, db.ForeignKey('bill.id', ondelete='CASCADE'), nullable=False)
+    assigned_bill = db.Column(db.Integer, db.ForeignKey(
+        'bill.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return f'<{self.instance} {self.service}>'
