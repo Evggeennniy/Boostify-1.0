@@ -216,7 +216,7 @@ export const Workplace = function () {
                     <div className="constructor__object" ref={constuctorRef}>
                       <div className="constructor__object-origin">
                         <img
-                          src={`/static_content/${currentInstance.icon}`}
+                          src={`${process.env.REACT_APP_STATIC_CONTENT_URL}/${currentInstance.icon}`}
                           alt="object-icon"
                           className="constructor__object-icon"
                         />
@@ -241,7 +241,7 @@ export const Workplace = function () {
                             {item.name}
                           </p>
                           <img
-                            src={`/static_content/${item.icon}`}
+                            src={`${process.env.REACT_APP_STATIC_CONTENT_URL}/${item.icon}`}
                             alt="service-icon"
                             className="constructor__services-icon"
                           />
