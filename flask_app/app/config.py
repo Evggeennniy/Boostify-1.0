@@ -13,7 +13,7 @@ TG_GROUP_ID = os.getenv('TG_GROUP_ID')
 
 def create_app() -> Flask:
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static_content')
     app.secret_key = os.getenv('SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URL')
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
