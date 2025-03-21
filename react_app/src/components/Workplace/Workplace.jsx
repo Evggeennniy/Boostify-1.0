@@ -36,7 +36,8 @@ export const Workplace = function () {
     if (!currentInput) return addNotification("Вставте посилання", "error");
     setInput("");
     const instance = utils.identifyUrl(currentUrl);
-    if (!instance) return addNotification("Посилання не розпізнане", "error");
+    if (!instance)
+      return addNotification("Вкажiть посилання на пост/профiль/рiлс", "error");
 
     const api = new URL(process.env.REACT_APP_GET_SERVICES_API_URI);
     api.searchParams.append("instance", instance);
@@ -149,7 +150,7 @@ export const Workplace = function () {
         <input
           type="text"
           className="search__input"
-          placeholder="Укажіть посилання..."
+          placeholder="Вкажіть посилання..."
           value={currentInput}
           onChange={handleInputChange}
         />

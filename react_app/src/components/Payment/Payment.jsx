@@ -13,7 +13,7 @@ export const Payment = () => {
   } = useGlobalContext();
   const [currentPrice, setPrice] = useState(0);
   const confirmButtonRef = useRef(null);
-  const card = "0000 0000 0000 0000";
+  const card = "4441 1110 6714 1931";
 
   const handleConfirm = () => {
     const api = new URL(`${process.env.REACT_APP_CREATE_ORDER_API_URI}`);
@@ -53,7 +53,8 @@ export const Payment = () => {
   useEffect(() => {
     setPrice(() => getFullPrice());
     confirmButtonRef.current.disabled = true;
-  }, [getFullPrice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="wrap">

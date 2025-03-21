@@ -2,6 +2,8 @@ from flask import request, jsonify, abort
 from app.models import db, Object, Bill, Order
 from app.config import TG_BOT_API_KEY, TG_GROUP_ID
 from decimal import Decimal
+from app.config import TG_BOT_API_KEY, TG_GROUP_ID
+import requests
 
 
 def init_routers(app, cache):
@@ -65,6 +67,9 @@ def init_routers(app, cache):
         db.session.bulk_save_objects(new_orders)
         db.session.commit()
 
-        # TODO SEND MESSAGE TO TG
+        message = f'Получен заказ на сумму {price} грн.'
+
+        url = f"https://api.telegram.org/bot{TG_BOT_API_KEY}/sendMessage"
+        requests.get(url, params={"chat_id": TG_GROUP_ID, "text": message})
 
         return '', 200

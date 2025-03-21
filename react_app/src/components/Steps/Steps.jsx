@@ -28,9 +28,9 @@ export const WorkSteps = function () {
               className="steps__item-icon"
             />
             <p className="steps__item-title">
-              ОБЕРІТЬ
+              CБЕРIТЬ
               <br />
-              КАТЕГОРІЮ
+              ЗАМОВЛЕННЯ
             </p>
           </div>
           <div className="steps__item">
@@ -40,9 +40,9 @@ export const WorkSteps = function () {
               className="steps__item-icon"
             />
             <p className="steps__item-title">
-              ЗРОБІТЬ
+              ВIДПРАВТЕ
               <br />
-              ОПЛАТУ
+              ЗАМОВЛЕННЯ
             </p>
           </div>
         </div>
