@@ -300,7 +300,8 @@ input {
     padding: 10px 5px 10px 10px;
   }
   .search .search__button {
-    flex: 2;
+    flex: 1;
+    min-width: 45px;
   }
 }
 
@@ -657,9 +658,10 @@ input {
 }
 @media (max-width: 576px) {
   .steps {
-    padding: 70px 0 80px 0;
+    padding: 70px 0 40px 0;
   }
   .steps .steps__explain {
+    flex-wrap: wrap;
     gap: 15px;
   }
   .steps .steps__item {
@@ -795,7 +797,7 @@ input {
 }
 @media (max-width: 576px) {
   .payment-steps {
-    padding: 70px 0 80px 0;
+    padding: 70px 0 40px 0;
   }
   .payment-steps .payment-steps__explain {
     gap: 15px;
