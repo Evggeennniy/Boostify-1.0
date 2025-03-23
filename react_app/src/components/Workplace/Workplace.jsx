@@ -1,6 +1,7 @@
 import * as utils from "../../utils";
 import { useRef, useState } from "react";
 import { useGlobalContext } from "../../context/GlobalContext";
+import { Price } from "../Price";
 
 export const Workplace = function () {
   const {
@@ -254,7 +255,7 @@ export const Workplace = function () {
               </div>
               {currentServices.length === 1 && (
                 <div className="constructor__confirm">
-                  <p className="constructor__confirm-output">{currentPrice}₴</p>
+                  <Price price={currentPrice} />
                   <div className="constructor__confirm-content">
                     <input
                       type="text"
