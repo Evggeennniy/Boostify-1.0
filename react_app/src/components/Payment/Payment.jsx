@@ -1,5 +1,7 @@
 import { PaymentSteps } from "../Steps";
 import { useGlobalContext } from "../../context/GlobalContext";
+import { useCashbackContext } from "../../context/CashbackContext";
+import { CashbackCard } from "../CashbackCard";
 import { useState, useEffect, useRef } from "react";
 
 export const Payment = () => {
@@ -11,16 +13,21 @@ export const Payment = () => {
     setOrderId,
     getFullPrice,
   } = useGlobalContext();
+  const { cashback } = useCashbackContext();
+
   const [currentPrice, setPrice] = useState(0);
+  const [isVisiblePayCashback, setPayCashback] = useState(false);
+
   const confirmButtonRef = useRef(null);
   const card = "4441 1110 6714 1931";
 
-  const handleConfirm = () => {
+  const handleConfirm = (is_cashback_pay) => {
     const api = new URL(`${process.env.REACT_APP_CREATE_ORDER_API_URI}`);
     fetch(api, {
+      credentials: 'include',
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([...currentOrdersList]),
+      body: JSON.stringify({ is_cashback_pay: is_cashback_pay, items: [...currentOrdersList] }),
     })
       .then((response) => {
         if (response.ok) return;
@@ -43,6 +50,14 @@ export const Payment = () => {
         }
       });
   };
+
+  useEffect(() => {
+    if (cashback >= currentPrice) {
+      setPayCashback(true);
+    } else {
+      setPayCashback(false);
+    }
+  }, [cashback, currentPrice]);
 
   const handleCopyCard = () => {
     navigator.clipboard.writeText(card);
@@ -74,9 +89,16 @@ export const Payment = () => {
             </button>
           </div>
           <div className="payment__menu">
+            {isVisiblePayCashback && (
+              <button
+                className="payment__menu-button"
+                onClick={() => { handleConfirm(true); }}
+              >
+                Оплата кешбеком
+              </button>)}
             <button
               className="payment__menu-button"
-              onClick={handleConfirm}
+              onClick={() => { handleConfirm(false) }}
               ref={confirmButtonRef}
             >
               Відправив(ла)
@@ -89,6 +111,7 @@ export const Payment = () => {
               />
             </button>
           </div>
+          <CashbackCard balance={cashback} />
         </div>
       </section>
 
