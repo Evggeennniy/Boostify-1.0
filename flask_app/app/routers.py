@@ -1,12 +1,30 @@
+import uuid
+
 from flask import request, jsonify, abort
-from app.models import db, Object, Bill, Order
-from app.config import TG_BOT_API_KEY, TG_GROUP_ID
+from app.models import db, Object, Bill, Order, User
 from decimal import Decimal
 from app.config import TG_BOT_API_KEY, TG_GROUP_ID
 import requests
 
 
 def init_routers(app, cache):
+    @app.after_request
+    def after_request_handler(response):
+        # Перевіряємо, чи шлях починається з /api
+        if not request.path.startswith('/api'):
+            return response
+
+        request_uuid = request.cookies.get('uuid')
+        if not request_uuid:
+            request_uuid = uuid.uuid4()
+            response.set_cookie('uuid', str(request_uuid))
+        return response
+
+    @app.route('/api/cashback', methods=('GET',))
+    def api_cashback():
+        cashback = str(User.get_cashback(request.cookies.get('uuid')))
+        return cashback, 200
+
     @app.route('/api/services', methods=('GET',))
     def get_services():
         instance_type = request.args.get('instance')
@@ -43,14 +61,16 @@ def init_routers(app, cache):
             abort(204)
 
         data = request.get_json()
+        user_id = request.cookies.get('uuid')
 
-        new_bill = Bill(status='Обробка')
+        new_bill = Bill(status= "Обробка Кешбек" if data["is_cashback_pay"] else 'Обробка',
+                        user_id=user_id)
         db.session.add(new_bill)
         db.session.commit()
 
         new_orders = []
         price = Decimal(0)
-        for item in data:
+        for item in data["items"]:
             new_order = Order(
                 instance=item['instance']['name'],
                 service=item['details']['name'],

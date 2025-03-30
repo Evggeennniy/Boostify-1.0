@@ -1,7 +1,9 @@
 import * as utils from "../../utils";
 import { useRef, useState } from "react";
 import { useGlobalContext } from "../../context/GlobalContext";
+import { useCashbackContext } from "../../context/CashbackContext";
 import { Price } from "../Price";
+import { CashbackCard } from "../CashbackCard";
 
 export const Workplace = function () {
   const {
@@ -17,6 +19,7 @@ export const Workplace = function () {
     setApiData,
   } = useGlobalContext();
 
+  const { cashback } = useCashbackContext();
   const constuctorRef = useRef(null);
   const basketButtonRef = useRef(null);
 
@@ -279,7 +282,7 @@ export const Workplace = function () {
               )}
             </div>
           )}
-
+          <CashbackCard balance={cashback} />
           {currentWorkplace === "basket" && (
             <div className="basket">
               <div className="basket-wrap">
@@ -345,6 +348,7 @@ export const Workplace = function () {
               </div>
             </div>
           )}
+
         </div>
       </section>
     </div>

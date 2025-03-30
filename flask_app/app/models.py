@@ -1,3 +1,5 @@
+import uuid
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 
@@ -45,11 +47,17 @@ class Bill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(
-        db.Enum('Обробка', 'Виконаний', 'Відхилений', name='bill_status'),
+        db.Enum('Обробка', 'Виконаний', 'Обробка Кешбек', 'Підтверджений', 'Підтверджений Кешбек', 'Відхилений', name='bill_status'),
         default='Обробка',
         nullable=False
     )
+    is_cashback_issued = db.Column(db.Boolean, default=False)
     created = db.Column(db.DateTime, default=datetime.now)
+
+    user = db.relationship('User', backref='bills')
+
+    user_id = db.Column(db.String, db.ForeignKey('users.id'))
+
     orders = db.relationship(
         'Order', backref='bill', lazy=False, cascade="all, delete-orphan"
     )
@@ -76,3 +84,38 @@ class Order(db.Model):
 
     def __repr__(self):
         return f'<{self.instance} {self.service}>'
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    balance_cashback = db.Column(db.DECIMAL(5, 2), default=0)
+
+    def increase_balance(self, amount):
+        """Збільшує баланс на задану суму."""
+        self.balance_cashback += amount
+        db.session.commit()
+
+    def decrease_balance(self, amount):
+        """Зменшує баланс на задану суму, якщо коштів достатньо."""
+        if self.balance_cashback >= amount:
+            self.balance_cashback -= amount
+            db.session.flush()  # Примусове оновлення в базі перед комітом
+            db.session.commit()
+        else:
+            raise ValueError("Недостатньо коштів на кешбек-рахунку")
+
+
+    @classmethod
+    def get_cashback(cls, user_id):
+        """Отримує користувача або створює нового, якщо його немає."""
+        user = db.session.get(cls, str(user_id))  # SQLAlchemy 2.0
+        if not user:
+            user = cls(id=str(user_id), balance_cashback=0)
+            db.session.add(user)
+            db.session.commit()
+        return user.balance_cashback
+
+    def __repr__(self):
+        return f'<{self.id} {self.service}>'
