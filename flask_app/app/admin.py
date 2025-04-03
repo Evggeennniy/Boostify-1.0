@@ -1,5 +1,7 @@
 from flask import flash
 from flask_admin.contrib.sqla import ModelView
+
+from app.errors import OrderErrorModerator
 from app.models import db, Service, Object, Bill, Order, User
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.form.upload import FileUploadField
@@ -49,31 +51,17 @@ class BillAdmin(ModelView):
         """Обробка змін статусу замовлення для кешбеку."""
         if not is_created:
             current_status = model.status
-            # Повернення кешбеку на 'Обробка Кешбек'
-            if current_status == 'Обробка Кешбек':
-                total_order_sum = sum(order.price for order in model.orders)
-                user = model.user
-                user.increase_balance(total_order_sum)
+            if current_status == 'Обробка Кешбек' and model.is_cashback_issued:
+                model.cashback_return()
 
-            # Оплата кешбеком на 'Підтверджений Кешбек' та нарахування кешбек
             elif current_status == 'Підтверджений Кешбек' and not model.is_cashback_issued:
-                total_order_sum = sum(order.price for order in model.orders)
-                user = model.user
                 try:
-                    user.decrease_balance(total_order_sum)
-                    user.increase_balance(total_order_sum * Decimal(0.10))
-                    model.is_cashback_issued = True
-                except ValueError:
+                    model.cashback_pay()
+                except OrderErrorModerator:
                     flash("Помилка: недостатньо кешбеку для списання! Замовлення відхилено.", "error")
-                    model.status = "Відхилений"  # Автоматично змінюємо статус
 
-            # Нарахування кешбеку
             elif current_status == 'Підтверджений' and not model.is_cashback_issued:
-                total_order_sum = sum(order.price for order in model.orders)
-                cashback_amount = total_order_sum * Decimal(0.10)
-                user = model.user
-                user.increase_balance(cashback_amount)
-                model.is_cashback_issued = True
+                model.cashback_accrual()
 
         return super().on_model_change(form, model, is_created)
 

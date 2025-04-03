@@ -1,0 +1,3 @@
+
+class OrderErrorModerator(Exception):
+    pass

@@ -1,7 +1,10 @@
 import uuid
+from decimal import Decimal
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
+
+from app.errors import OrderErrorModerator
 
 db = SQLAlchemy()
 
@@ -62,6 +65,32 @@ class Bill(db.Model):
         'Order', backref='bill', lazy=False, cascade="all, delete-orphan"
     )
 
+    @property
+    def total_order_sum(self):
+        return sum(order.price for order in self.orders)
+
+    def cashback_accrual(self):
+        """Нарахування кешбеку"""
+        cashback_amount = self.total_order_sum * Decimal(0.10)
+        self.user.increase_balance(cashback_amount)
+        self.is_cashback_issued = True
+
+    def cashback_return(self):
+        """Повернення кешбеку"""
+        self.user.increase_balance(self.total_order_sum)
+        self.is_cashback_issued = False
+
+    def cashback_pay(self):
+        """Оплата кешбеку"""
+        total_order_sum= self.total_order_sum
+        try:
+            self.user.decrease_balance(total_order_sum) # -
+            self.user.increase_balance(total_order_sum * Decimal(0.10)) # +
+            self.is_cashback_issued = True
+        except OrderErrorModerator as e:
+            self.status = "Відхилений"
+            raise e
+
 
 class Order(db.Model):
     __tablename__ = 'order'
@@ -104,7 +133,7 @@ class User(db.Model):
             db.session.flush()  # Примусове оновлення в базі перед комітом
             db.session.commit()
         else:
-            raise ValueError("Недостатньо коштів на кешбек-рахунку")
+            raise OrderErrorModerator("Недостатньо коштів на кешбек-рахунку")
 
 
     @classmethod
