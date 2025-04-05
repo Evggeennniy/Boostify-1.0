@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_basicauth import BasicAuth
+from flask_babel import Babel
 from dotenv import load_dotenv
 from pymemcache import Client
 import os
@@ -30,6 +31,7 @@ def create_app() -> Flask:
 
     db.init_app(app)
     Migrate(app, db)
+    Babel(app)
     init_admin(app, basic_auth)
     init_routers(app, cache)
     init_cors(app)
