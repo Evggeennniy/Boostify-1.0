@@ -256,6 +256,7 @@ export const Workplace = function () {
                   </div>
                 )}
               </div>
+              <CashbackCard balance={cashback} />
               {currentServices.length === 1 && (
                 <div className="constructor__confirm">
                   <Price price={currentPrice} />
@@ -282,7 +283,6 @@ export const Workplace = function () {
               )}
             </div>
           )}
-          <CashbackCard balance={cashback} />
           {currentWorkplace === "basket" && (
             <div className="basket">
               <div className="basket-wrap">
@@ -348,7 +348,6 @@ export const Workplace = function () {
               </div>
             </div>
           )}
-
         </div>
       </section>
     </div>
