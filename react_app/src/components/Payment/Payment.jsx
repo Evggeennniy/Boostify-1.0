@@ -24,10 +24,13 @@ export const Payment = () => {
   const handleConfirm = (is_cashback_pay) => {
     const api = new URL(`${process.env.REACT_APP_CREATE_ORDER_API_URI}`);
     fetch(api, {
-      credentials: 'include',
+      credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ is_cashback_pay: is_cashback_pay, items: [...currentOrdersList] }),
+      body: JSON.stringify({
+        is_cashback_pay: is_cashback_pay,
+        items: [...currentOrdersList],
+      }),
     })
       .then((response) => {
         if (response.ok) return;
@@ -88,17 +91,23 @@ export const Payment = () => {
               />
             </button>
           </div>
+          <CashbackCard balance={cashback} />
           <div className="payment__menu">
             {isVisiblePayCashback && (
               <button
                 className="payment__menu-button"
-                onClick={() => { handleConfirm(true); }}
+                onClick={() => {
+                  handleConfirm(true);
+                }}
               >
                 Оплата кешбеком
-              </button>)}
+              </button>
+            )}
             <button
               className="payment__menu-button"
-              onClick={() => { handleConfirm(false) }}
+              onClick={() => {
+                handleConfirm(false);
+              }}
               ref={confirmButtonRef}
             >
               Відправив(ла)
@@ -111,7 +120,6 @@ export const Payment = () => {
               />
             </button>
           </div>
-          <CashbackCard balance={cashback} />
         </div>
       </section>
 
