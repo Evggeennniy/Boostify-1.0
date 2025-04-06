@@ -8,7 +8,7 @@ export const Header = function () {
             alt="logotype"
             className="logotype__img"
           />
-          <h2 className="logotype__cmp-name">Boostify</h2>
+          <h2 className="logotype__cmp-name">Capilike</h2>
         </div>
         <div className="nav">
           <ul className="nav__list">

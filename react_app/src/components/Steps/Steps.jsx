@@ -95,7 +95,7 @@ export const PaymentSteps = () => {
             <p className="payment-steps__item-title">
               ОЧІКУЙТЕ
               <br />
-              15 ХВИЛИН
+              5 ХВИЛИН
             </p>
           </div>
         </div>

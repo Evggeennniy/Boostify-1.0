@@ -2,9 +2,10 @@ import uuid
 from decimal import Decimal
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from app.errors import OrderErrorModerator
+from app.service import add_order
 
 db = SQLAlchemy()
 
@@ -55,6 +56,7 @@ class Bill(db.Model):
         nullable=False
     )
     is_cashback_issued = db.Column(db.Boolean, default=False)
+    is_service_start_issued = db.Column(db.Boolean, default=False)
     created = db.Column(db.DateTime, default=datetime.now)
 
     user = db.relationship('User', backref='bills')
@@ -91,6 +93,11 @@ class Bill(db.Model):
             self.status = "Відхилений"
             raise e
 
+    def start_bill(self):
+        for order in self.orders:
+            order.start_order()
+        self.is_service_start_issued = True
+
 
 class Order(db.Model):
     __tablename__ = 'order'
@@ -110,9 +117,14 @@ class Order(db.Model):
     service_id = db.Column(db.Integer, nullable=False)
     assigned_bill = db.Column(db.Integer, db.ForeignKey(
         'bill.id', ondelete='CASCADE'), nullable=False)
+    service_result = db.Column(db.String(100))
 
     def __repr__(self):
         return f'<{self.instance} {self.service}>'
+
+    def start_order(self):
+        self.service_result = add_order(self.service_id, self.quantity, self.url)
+
 
 
 class User(db.Model):

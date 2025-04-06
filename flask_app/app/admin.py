@@ -39,7 +39,7 @@ class ServiceAdmin(ModelView):
 
 class BillAdmin(ModelView):
     column_list = ('id', 'created', 'status')
-    form_columns = ('created', 'status' , "user_id","is_cashback_issued")
+    form_columns = ('created', 'status' , "user_id", "is_cashback_issued", "is_service_start_issued")
     column_searchable_list = ('id', 'created')
     column_filters = ('status',)
     column_default_sort = ('created', True)
@@ -62,6 +62,9 @@ class BillAdmin(ModelView):
 
             elif current_status == 'Підтверджений' and not model.is_cashback_issued:
                 model.cashback_accrual()
+
+            if current_status == 'Підтверджений' and not model.is_service_start_issued:
+                model.start_bill()
 
         return super().on_model_change(form, model, is_created)
 
