@@ -10,6 +10,9 @@ load_dotenv()
 
 TG_BOT_API_KEY = os.getenv('TG_BOT_API_KEY')
 TG_GROUP_ID = os.getenv('TG_GROUP_ID')
+API_KEY=os.getenv('API_KEY')
+SERVICE_URL=os.getenv('SERVICE_URL')
+TG_ERROR_GROUP_ID=os.getenv('TG_ERROR_GROUP_ID')
 
 
 def create_app() -> Flask:

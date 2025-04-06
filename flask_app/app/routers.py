@@ -1,4 +1,3 @@
-import json
 import uuid
 
 from flask import request, jsonify, abort
@@ -6,8 +5,8 @@ from flask import request, jsonify, abort
 from app.errors import OrderErrorModerator
 from app.models import db, Object, Bill, Order, User
 from decimal import Decimal
-from app.config import TG_BOT_API_KEY, TG_GROUP_ID
-import requests
+
+from app.utils import send_message, answer_callback_query, hide_keyboard
 
 
 def init_routers(app, cache):
@@ -37,6 +36,7 @@ def init_routers(app, cache):
                 callback_id = callback["id"]
                 data_parts = callback["data"].split("_")
                 action = data_parts[0]
+                message_id = callback["message"]["message_id"]
                 order_id = int(data_parts[1])
 
                 # Шукаємо замовлення в базі даних
@@ -44,6 +44,7 @@ def init_routers(app, cache):
                 if not bill:
                     answer_callback_query(callback_id,"Помилка ❗️❗️")
                     send_message("Помилка:🔍 Замовлення не знайдено❗️❗️")
+                    hide_keyboard(message_id)
                     return 'OK', 200
 
                 if action == "acceptCashback" and not bill.is_cashback_issued:
@@ -62,16 +63,21 @@ def init_routers(app, cache):
                     bill.status = 'Підтверджений'
                     db.session.add(bill)
                     db.session.commit()
-                    answer_callback_query(callback_id, "🍾 Оновлено 💳")
                 elif action == "cancel":
                     bill.status = 'Відхилений'
                     db.session.add(bill)
                     db.session.commit()
-                    answer_callback_query(callback_id, "Змовлення відхилино ❌")
-
                 elif bill.is_cashback_issued:
                     answer_callback_query(callback_id, "Операція була зроблена раніше")
 
+                if (action == "acceptPay" or action == "acceptCashback") and not bill.is_service_start_issued:
+                    bill.start_bill()
+                    db.session.add(bill)
+                    db.session.commit()
+                    answer_callback_query(callback_id, "Запрос до сервера зроблено")
+
+                print(message_id)
+                hide_keyboard(message_id)
                 answer_callback_query(callback_id, "Дія не знайдена")
         except Exception as e:
             print(e)
@@ -160,17 +166,3 @@ def init_routers(app, cache):
         return '', 200
 
 
-
-def send_message(message, keyboard = None):
-    try:
-        url = f"https://api.telegram.org/bot{TG_BOT_API_KEY}/sendMessage"
-        params = {"chat_id": TG_GROUP_ID, "text": message}
-        if keyboard:
-            params["reply_markup"] = json.dumps(keyboard)
-        requests.get(url, params=params)
-    except Exception as e:
-        print(e)
-
-def answer_callback_query(callback_id, message):
-    url = f"https://api.telegram.org/bot{TG_BOT_API_KEY}/answerCallbackQuery"
-    requests.post(url,json={"callback_query_id": callback_id, "text": message})
